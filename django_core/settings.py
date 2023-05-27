@@ -14,15 +14,15 @@ import importlib
 from pathlib import Path
 from decouple import config
 
-system_configs = importlib.import_module(f"enviroments.env_{config('ENVIROMENT', default='local')}")
+syscon = importlib.import_module(f"enviroments.env_{config('ENVIROMENT', default='local')}")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-pajk1seij+@o=)_zhsg$q$3n#w&%8qnp4t2vjpgnxw$kkalw%f'
 
-DEBUG = system_configs.DEBUG
+DEBUG = syscon.DEBUG
 
-ALLOWED_HOSTS = system_configs.ALLOWED_HOSTS
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,11 +31,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
+    'django_app'
 ]
 
-MIDDLEWARE = system_configs.MIDDLEWARE
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
-ROOT_URLCONF = 'django_core.urls'
+ROOT_URLCONF = 'django_app.urls'
 
 TEMPLATES = [
     {
@@ -55,7 +65,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_core.wsgi.application'
 
-DATABASES = system_configs.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': syscon.DATABASE_NAME,
+        'USER': syscon.DATABASE_USER,
+        'PASSWORD': syscon.DATABASE_PASSWORD,
+        'HOST': syscon.DATABASE_HOST,
+        'PORT': syscon.DATABASE_PORT,
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -72,18 +91,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CACHES = system_configs.CACHES
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'redis://{syscon.CACHE_HOST}:{syscon.CACHE_POST}/{syscon.CACHE_DB}',
+    }
+}
 
-SESSION_CACHE_ALIAS = system_configs.SESSION_CACHE_ALIAS
+SESSION_CACHE_ALIAS = "default"
 
-LANGUAGE_CODE = system_configs.LANGUAGE_CODE
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = system_configs.TIME_ZONE
+TIME_ZONE = 'UTC'
 
-USE_I18N = system_configs.USE_I18N
+USE_I18N = True
 
-USE_TZ = system_configs.USE_TZ
+USE_TZ = True
 
-STATIC_URL = system_configs.STATIC_URL
+STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

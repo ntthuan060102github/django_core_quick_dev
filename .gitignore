@@ -3,3 +3,4 @@
 ./venv
 **/migrations
 **/__init__.py
+./.vscode

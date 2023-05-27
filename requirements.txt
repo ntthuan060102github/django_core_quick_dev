@@ -2,4 +2,7 @@ python-decouple
 django
 djangorestframework
 mysqlclient
-django-redis
+redis
+django_redis
+celery
+drf-yasg

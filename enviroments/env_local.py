@@ -1,43 +1,11 @@
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DATABASE_NAME = 'zshop'
+DATABASE_USER = 'root'
+DATABASE_PASSWORD = 'Thuan123'
+DATABASE_HOST = '127.0.0.1'
+DATABASE_PORT = '3306'
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'mytin_pnc',
-        'USER': 'root',
-        'PASSWORD': 'Thuan123',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1'
-    }
-}
-
-SESSION_CACHE_ALIAS = 'default'
-
-STATIC_URL = 'static/'
+CACHE_HOST = "127.0.0.1"
+CACHE_POST = "6379"
+CACHE_DB = 1
