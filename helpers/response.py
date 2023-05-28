@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.response import Response
 from configs.response_variables import STATUS, MESSAGES
 
@@ -34,5 +35,15 @@ class ResponseManager:
                 "status": STATUS["INTERNAL_SERVER_ERROR"],
                 "message": MESSAGES["INTERNAL_SERVER_ERROR"],
                 "data": self.data
+            }
+        )
+
+    @property
+    def not_found(self):
+        return JsonResponse(
+            {
+                "status": STATUS["NOT_FOUND"],
+                "message": MESSAGES["NOT_FOUND"],
+                "data": None
             }
         )

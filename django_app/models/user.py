@@ -7,7 +7,7 @@ class UserModel(TimeStampModel):
         db_table = 'user'
 
     id = models.AutoField(primary_key=True)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True, editable=False, db_index=True)
     password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True, default='')

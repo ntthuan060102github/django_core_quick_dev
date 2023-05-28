@@ -13,11 +13,11 @@ class UserProfileModel(TimeStampModel):
         OTHER = 2
 
     id = models.AutoField(primary_key=True)
-    gender = models.SmallIntegerField(choices=Gender.choices, default=2)
+    gender = models.SmallIntegerField(choices=Gender.choices, default=Gender.OTHER)
     birthday = models.DateField(null=True, default=None)
     phone = models.CharField(max_length=20, null=True, default=None)
     address = models.CharField(max_length=255, null=True, default=None)
     avatar = models.CharField(max_length=255, null=True, default=None)
-    descrtion = models.TextField(null=True, default=None)
+    description = models.TextField(null=True, default=None)
     alternate_name = models.CharField(max_length=255, null=True, default=None)
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')

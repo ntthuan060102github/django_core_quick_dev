@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from django_app.models.user import UserModel
 
 from django_app.serializers.base import BaseModelSerializer
@@ -8,9 +10,11 @@ class UserSerializer(BaseModelSerializer):
         model = UserModel
         fields = "__all__"
         read_only_fields = ["id", "is_active", "deleted_at", "created_at", "updated_at"]
-        relations = {
-            "profile": UserProfileSerializer(required=True, many=False)
-        }
 
+    class Options:
+        relations = ["profile"]
+
+    password = serializers.CharField(write_only=True, required=True)
+    profile = UserProfileSerializer(required=False, many=False, default={})
     
     

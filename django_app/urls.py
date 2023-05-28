@@ -1,32 +1,11 @@
-from drf_yasg import openapi
-from django.urls import re_path, path
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
+from django.conf.urls import handler404
 
-from django_app.views.user import UserView
+from django_app.views.health import Health
 
-schema_view = get_schema_view(
-   openapi.Info(
-      title="API Document for Django Core",
-      default_version='v1.0.0',
-      description="API Document for Django Core",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="ntthuan060102.work@gmail.com"),
-   ),
-   public=True,
-   permission_classes=[permissions.AllowAny],
-)
+from django_app.routers.user import router as user_router
+from django_app.routers.swagger import urls as swagger_router
+from django_app.routers.health import urls as health_router
 
-urlpatterns = [
-    re_path(
-        r'^swagger(?P<format>\.json|\.yaml)$', 
-        schema_view.without_ui(cache_timeout=0), 
-        name='schema-json'
-    ),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+urlpatterns = swagger_router + user_router.urls + health_router
 
-    path('user/', UserView.as_view({'get': 'retrieve', 'post': 'create'})),
-]
-
-# handler404 = custom404
+handler404 = Health().not_found

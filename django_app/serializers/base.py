@@ -4,20 +4,20 @@ class BaseModelSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, read_only=True)
     updated_at = serializers.DateTimeField(required=False, read_only=True)
     
-    class Meta:
-        relations = {}
+    class Options:
+        relations = []
 
     def __init__(self, *args, **kwargs):
         exists = set(self.fields.keys())
-        relation = kwargs.pop("relation", False)
+        relation = bool(kwargs.pop("relation", True))
         fields = kwargs.pop("fields", []) or exists
         exclude = kwargs.pop("exclude", [])
         
         super().__init__(*args, **kwargs)
 
-        if relation is True:
-            for r in self.Meta.relations.keys():
-                self.fields[r] = self.Meta.relations[r]
+        if relation is False:
+            for r in self.Options.relations:
+                self.fields.pop(r, None)
             
         for field in exclude + list(exists - fields):
             self.fields.pop(field, None)

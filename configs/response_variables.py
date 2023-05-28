@@ -4,7 +4,8 @@ MESSAGES = {
     "INTERNAL_SERVER_ERROR": "Internal server error!",
     "TOKEN_EXPIRED": "Token expired!",
     "TOKEN_INVALID": "Invalid token!",
-    "BUSINESS_ERROR": "Business error!"
+    "BUSINESS_ERROR": "Business error!",
+    "NOT_FOUND": "Not found!"
 }
 
 STATUS = {
@@ -14,6 +15,7 @@ STATUS = {
     "INVALID_INPUT": 5,
     "BUSINESS_ERROR": 6,
     "TOKEN_EXPIRED": 7,
+    "NOT_FOUND": 404
 }
 
 EXCEPTION_MESSAGES ={
