@@ -12,7 +12,7 @@ class UserSerializer(BaseModelSerializer):
         read_only_fields = ["id", "is_active", "deleted_at", "created_at", "updated_at"]
 
     class Options:
-        relations = ["profile"]
+        referenced_by = ["profile"]
 
     password = serializers.CharField(write_only=True, required=True)
     profile = UserProfileSerializer(required=False, many=False, default={})

@@ -43,7 +43,6 @@ class ResponseManager:
         return JsonResponse(
             {
                 "status": STATUS["NOT_FOUND"],
-                "message": MESSAGES["NOT_FOUND"],
-                "data": None
+                "message": MESSAGES["NOT_FOUND"]
             }
         )

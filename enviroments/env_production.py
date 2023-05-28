@@ -1,4 +1,4 @@
-DEBUG = True
+DEBUG = False
 
 DATABASE_NAME = 'mytin_pnc'
 DATABASE_USER = 'root'
