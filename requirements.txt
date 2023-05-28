@@ -6,3 +6,4 @@ redis
 django_redis
 celery
 drf-yasg
+bcrypt

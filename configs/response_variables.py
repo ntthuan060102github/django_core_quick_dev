@@ -5,11 +5,13 @@ MESSAGES = {
     "TOKEN_EXPIRED": "Token expired!",
     "TOKEN_INVALID": "Invalid token!",
     "BUSINESS_ERROR": "Business error!",
-    "NOT_FOUND": "Not found!"
+    "NOT_FOUND": "Not found!",
+    "OBJECT_NOT_FOUND": "Object not found!",
 }
 
 STATUS = {
     "SUCCESS": 1,
+    "OBJECT_NOT_FOUND": 2,
     "TOKEN_INVALID": 3,
     "INTERNAL_SERVER_ERROR": 4,
     "INVALID_INPUT": 5,

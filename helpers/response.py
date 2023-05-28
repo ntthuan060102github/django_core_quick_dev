@@ -46,3 +46,13 @@ class ResponseManager:
                 "message": MESSAGES["NOT_FOUND"]
             }
         )
+    
+    @property
+    def object_not_found(self):
+        return JsonResponse(
+            {
+                "data": self.data,
+                "status": STATUS["OBJECT_NOT_FOUND"],
+                "message": MESSAGES["OBJECT_NOT_FOUND"]
+            }
+        )

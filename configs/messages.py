@@ -1,0 +1,1 @@
+INVALID_PASSWORD = "Password must be 8 to 20 characters long, must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"
