@@ -1,7 +1,7 @@
 from django.db import models
 
 from django_app.models.timestamp import TimeStampModel
-from django_app.models.user import UserModel
+from django_app.models.user_models.user import UserModel
 
 class UserProfileModel(TimeStampModel):
     class Meta:

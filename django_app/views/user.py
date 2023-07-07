@@ -1,5 +1,5 @@
 from django_app.views.base import BaseView
-from django_app.models.user import UserModel
+from django_app.models.user_models.user import UserModel
 from django_app.serializers.user import UserSerializer
 
 class UserView(BaseView):

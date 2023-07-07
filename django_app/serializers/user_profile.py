@@ -1,6 +1,6 @@
 from django_app.serializers.base import BaseModelSerializer
 
-from django_app.models.user_profile import UserProfileModel
+from django_app.models.user_models.user_profile import UserProfileModel
 
 class UserProfileSerializer(BaseModelSerializer):
     class Meta:

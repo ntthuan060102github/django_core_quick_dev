@@ -4,11 +4,13 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from django_app.app_configs import app_configs as av
+
 schema_view = get_schema_view(
    openapi.Info(
-      title="API Document for Django Core",
-      default_version='v1.0.0',
-      description="API Document for Django Core",
+      title=av.SERVICE_NAME_SEMANTIC,
+      default_version=av.SERVICE_VERSION,
+      description=av.SERVICE_DESCRIPTION,
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="ntthuan060102.work@gmail.com"),
    ),

@@ -1,9 +1,9 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
-from configs.response_variables import STATUS, MESSAGES
+import configs.response_variables as rv
 
 class ResponseManager:
-    def __init__(self, data=None, status=STATUS["SUCCESS"], message=MESSAGES["SUCCESS"]):
+    def __init__(self, data=None, status=rv.STATUS["SUCCESS"], message=rv.MESSAGES["SUCCESS"]):
         self.data = data
         self.status = status
         self.message = message
@@ -22,8 +22,8 @@ class ResponseManager:
     def validate_error(self):
         return Response(
             {
-                "status": STATUS["INVALID_INPUT"],
-                "message": MESSAGES["INVALID_INPUT"],
+                "status": rv.STATUS["INVALID_INPUT"],
+                "message": rv.MESSAGES["INVALID_INPUT"],
                 "data": self.data
             }
         )
@@ -32,8 +32,8 @@ class ResponseManager:
     def internal_server_error(self):
         return Response(
             {
-                "status": STATUS["INTERNAL_SERVER_ERROR"],
-                "message": MESSAGES["INTERNAL_SERVER_ERROR"],
+                "status": rv.STATUS["INTERNAL_SERVER_ERROR"],
+                "message": rv.MESSAGES["INTERNAL_SERVER_ERROR"],
                 "data": self.data
             }
         )
@@ -42,8 +42,8 @@ class ResponseManager:
     def not_found(self):
         return JsonResponse(
             {
-                "status": STATUS["NOT_FOUND"],
-                "message": MESSAGES["NOT_FOUND"]
+                "status": rv.STATUS["NOT_FOUND"],
+                "message": rv.MESSAGES["NOT_FOUND"]
             }
         )
     
@@ -52,7 +52,7 @@ class ResponseManager:
         return JsonResponse(
             {
                 "data": self.data,
-                "status": STATUS["OBJECT_NOT_FOUND"],
-                "message": MESSAGES["OBJECT_NOT_FOUND"]
+                "status": rv.STATUS["OBJECT_NOT_FOUND"],
+                "message": rv.MESSAGES["OBJECT_NOT_FOUND"]
             }
         )

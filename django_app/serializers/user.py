@@ -1,8 +1,8 @@
 import re
 from rest_framework import serializers
-from configs.app_variables import PASSWORD_REGEX
-from configs.messages import INVALID_PASSWORD
-from django_app.models.user import UserModel
+import django_app.app_configs.app_messages as amsg
+import django_app.app_configs.app_variables as av
+from django_app.models.user_models.user import UserModel
 from django_app.serializers.base import BaseModelSerializer
 from django_app.serializers.user_profile import UserProfileSerializer
 
@@ -24,9 +24,9 @@ class UserSerializer(BaseModelSerializer):
     profile = UserProfileSerializer(required=False, many=False, default={})
 
     def validate_password(self, value):
-        regex = PASSWORD_REGEX
+        regex = av.PASSWORD_REGEX
         if not re.search(regex, value):
-            raise serializers.ValidationError(INVALID_PASSWORD)
+            raise serializers.ValidationError(amsg.INVALID_PASSWORD)
         return value
 
     

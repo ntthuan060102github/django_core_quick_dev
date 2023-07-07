@@ -1,5 +1,5 @@
 import bcrypt
-from configs.app_variables import UNICODE
+import django_app.app_configs.app_variables as av
 from django.db import models
 from django_app.models.timestamp import TimeStampModel
 
@@ -16,9 +16,9 @@ class UserModel(TimeStampModel):
     is_active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        self.password = bcrypt.hashpw(self.password.encode(UNICODE), bcrypt.gensalt())
+        self.password = bcrypt.hashpw(self.password.encode(av.UNICODE), bcrypt.gensalt())
         super(UserModel, self).save(*args, **kwargs)
         return self
     
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode(UNICODE), self.password.encode(UNICODE))
+        return bcrypt.checkpw(password.encode(av.UNICODE), self.password.encode(av.UNICODE))
