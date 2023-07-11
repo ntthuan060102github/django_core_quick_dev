@@ -3,14 +3,14 @@ from rest_framework import serializers
 import django_app.app_configs.app_messages as amsg
 import django_app.app_configs.app_variables as av
 from django_app.models.user_models.user import UserModel
-from django_app.serializers.base import BaseModelSerializer
+from app_core.serializers.common_model_serializer import CommonModelSerializer
 from django_app.serializers.user_profile import UserProfileSerializer
 
-class UserSerializer(BaseModelSerializer):
+class UserSerializer(CommonModelSerializer):
     class Meta:
         model = UserModel
         fields = "__all__"
-        read_only_fields = ["id", "is_active", "deleted_at", "created_at", "updated_at"]
+        read_only_fields = ["id", "is_active", "created_at", "updated_at", "deleted_at"]
 
     class Options:
         referenced_by = ["profile"]

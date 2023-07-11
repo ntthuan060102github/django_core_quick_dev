@@ -5,7 +5,7 @@ from django_app.models.timestamp import TimeStampModel
 
 class UserModel(TimeStampModel):
     class Meta:
-        db_table = 'user'
+        db_table = 'users'
 
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=False, db_index=True, blank=False, null=False)
@@ -20,5 +20,6 @@ class UserModel(TimeStampModel):
         super(UserModel, self).save(*args, **kwargs)
         return self
     
-    def check_password(self, password):
+    def compare_password(self, password):
         return bcrypt.checkpw(password.encode(av.UNICODE), self.password.encode(av.UNICODE))
+    

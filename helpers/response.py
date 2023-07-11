@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
-import configs.response_variables as rv
+import app_core.variables.response_variables as rv
 
 class ResponseManager:
     def __init__(self, data=None, status=rv.STATUS["SUCCESS"], message=rv.MESSAGES["SUCCESS"]):

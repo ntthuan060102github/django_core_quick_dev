@@ -1,4 +1,7 @@
-from django.db import models
+import pytz
+import datetime
+from django.db import models, Error
+from django.conf import settings as dst
 
 class TimeStampModel(models.Model):
     class Meta:
@@ -15,5 +18,15 @@ class TimeStampModel(models.Model):
             if models.fields.related.RelatedField.__subclasscheck__(field.__class__):
                 fields.append(field.name)
         return fields
+
+    def soft_delete(self):
+        try:
+            if self.deleted_at != None:
+                raise Error("This object has been soft deleted")
+            self.deleted_at = datetime.datetime.now(tz=dst.PY_TIME_ZONE)
+            self.save(update_fields=["deleted_at"])
+        except Exception as e:
+            raise e
+
     
     

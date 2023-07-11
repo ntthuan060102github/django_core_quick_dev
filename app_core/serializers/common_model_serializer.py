@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-class BaseModelSerializer(serializers.ModelSerializer):
+class CommonModelSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, read_only=True)
     updated_at = serializers.DateTimeField(required=False, read_only=True)
     
@@ -14,7 +14,11 @@ class BaseModelSerializer(serializers.ModelSerializer):
         exclude = kwargs.pop("exclude", [])
         
         super().__init__(*args, **kwargs)
+        related_fiels = self.Meta.model.get_related_fields()
 
+        if not isinstance(getattr(self.Options, "referenced_by", None), list):
+            raise Exception("'related_fiels' in Options class shuold be a list of strings.")
+        
         if relation is False:
             for r in self.Options.referenced_by:
                 self.fields.pop(r, None)

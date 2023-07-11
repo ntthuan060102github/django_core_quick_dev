@@ -7,6 +7,7 @@ MESSAGES = {
     "BUSINESS_ERROR": "Business error!",
     "NOT_FOUND": "Not found!",
     "OBJECT_NOT_FOUND": "Object not found!",
+    "NO_PERMISSION": "No permissions!"
 }
 
 STATUS = {
@@ -17,6 +18,7 @@ STATUS = {
     "INVALID_INPUT": 5,
     "BUSINESS_ERROR": 6,
     "TOKEN_EXPIRED": 7,
+    "NO_PERMISSION": 403,
     "NOT_FOUND": 404
 }
 

@@ -5,7 +5,7 @@ from django_app.models.user_models.user import UserModel
 
 class UserProfileModel(TimeStampModel):
     class Meta:
-        db_table = 'user_profile'
+        db_table = 'user_profiles'
 
     class Gender(models.IntegerChoices):
         FEMALE = 0
