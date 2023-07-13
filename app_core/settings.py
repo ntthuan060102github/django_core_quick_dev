@@ -14,7 +14,7 @@ import importlib
 from pathlib import Path
 from decouple import config
 
-sys_conf = importlib.import_module(f"enviroments.env_{config('ENVIROMENT', default='local')}")
+sys_conf = importlib.import_module(f"configs.enviroments.env_{config('ENVIROMENT', default='local')}")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -102,14 +102,21 @@ CACHES = {
 SESSION_CACHE_ALIAS = "default"
 
 LANGUAGE_CODE = 'en-us'
-
 PY_TIME_ZONE = pytz.UTC
 TIME_ZONE = PY_TIME_ZONE.zone
-
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+CELERY_CACHE_BACKEND = "default"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60

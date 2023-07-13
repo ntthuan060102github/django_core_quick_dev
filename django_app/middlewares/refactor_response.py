@@ -8,8 +8,9 @@ class RefactorResponse:
     def __call__(self, request):
         try:
             response = self.get_response(request)
+            payload = getattr(response, "data", None)
             
-            if "middleware_error" in response.data:
+            if dict.__subclasscheck__(payload.__class__) and "middleware_error" in payload:
                 error_code = str(response.data["middleware_error"])
                 response.data = {
                     "data": None,

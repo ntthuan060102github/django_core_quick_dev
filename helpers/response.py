@@ -42,6 +42,7 @@ class ResponseManager:
     def not_found(self):
         return JsonResponse(
             {
+                "data": self.data,
                 "status": rv.STATUS["NOT_FOUND"],
                 "message": rv.MESSAGES["NOT_FOUND"]
             }

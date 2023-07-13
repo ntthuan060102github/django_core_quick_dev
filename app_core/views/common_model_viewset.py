@@ -1,9 +1,9 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.exceptions import PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from helpers.response import ResponseManager as Response
 
-class CommonModelViewSet(ModelViewSet):
+class CommonModelViewSet(GenericViewSet):
     relation = False
     exclude_fields = []
     get_fields = []
@@ -58,6 +58,21 @@ class CommonModelViewSet(ModelViewSet):
         except Exception as e:
             print(e)
             return Response(str(e)).internal_server_error
-        
+
+    def update(self, request, pk):
+        try:
+            data = request.data.copy()
+            instance = self.queryset.get(pk=pk)
+            serializer = self.serializer_class(instance, data=data, partial=True)
+            if not serializer.is_valid():
+                return Response(data=serializer.errors).validate_error
+            serializer.save()
+            return Response().common
+        except ObjectDoesNotExist as d_e:
+            return Response(str(d_e)).object_not_found
+        except Exception as e:
+            print(e)
+            return Response(str(e)).internal_server_error
+         
     def permission_denied(self, request, message=None, code=None):
         raise PermissionDenied(message, code)

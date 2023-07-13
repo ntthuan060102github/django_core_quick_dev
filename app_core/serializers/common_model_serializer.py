@@ -14,10 +14,10 @@ class CommonModelSerializer(serializers.ModelSerializer):
         exclude = kwargs.pop("exclude", [])
         
         super().__init__(*args, **kwargs)
-        related_fiels = self.Meta.model.get_related_fields()
+        
 
-        if not isinstance(getattr(self.Options, "referenced_by", None), list):
-            raise Exception("'related_fiels' in Options class shuold be a list of strings.")
+        self.__verify_option_referenced_by()
+        self.__verify_content_referenced_by()
         
         if relation is False:
             for r in self.Options.referenced_by:
@@ -40,3 +40,30 @@ class CommonModelSerializer(serializers.ModelSerializer):
             self.fields[k].__class__.Meta.model.objects.create(**new_v)
         
         return instance
+    
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+    def __verify_option_referenced_by(self):
+        if hasattr(self.Options, "referenced_by"):
+            referenced_by = getattr(self.Options, "referenced_by", None)
+            if (
+                not isinstance(referenced_by, list) 
+                or (
+                    any(
+                        map(lambda x: not isinstance(x, str), referenced_by)
+                    )
+                    and referenced_by != []
+                )
+            ):
+                exc_obj = f"{self.__class__.__name__}.Options.referenced_by"
+                raise Exception(f"{exc_obj} should be a list of strings.")
+            
+    def __verify_content_referenced_by(self):
+        related_fiels = self.Meta.model.get_related_fields()
+        # print("---------------------------------------------------")
+        # print(self.Meta.model)
+        # print(self.fields)

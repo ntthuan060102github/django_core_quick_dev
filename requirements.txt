@@ -1,9 +1,10 @@
 python-decouple
 django
 djangorestframework
+drf-nested-routers
 mysqlclient
 redis
 django_redis
-celery
 drf-yasg
 bcrypt
+celery
