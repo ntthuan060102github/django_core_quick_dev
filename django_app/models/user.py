@@ -1,7 +1,5 @@
-import bcrypt
-import django_app.app_configs.app_variables as av
 from django.db import models
-from django_app.models.timestamp import TimeStampModel
+from app_core.models.timestamp import TimeStampModel
 
 class UserModel(TimeStampModel):
     class Meta:
@@ -26,18 +24,3 @@ class UserModel(TimeStampModel):
     description = models.TextField(null=True, default=None)
     alternate_name = models.CharField(max_length=255, null=True, default=None)
     blocked_at = models.DateTimeField(null=True, default=None)
-
-    def save(self, *args, **kwargs):
-        if self.id is None or kwargs.get("password_update", False) == True:
-            self.password = bcrypt.hashpw(self.password.encode(av.UNICODE), bcrypt.gensalt())
-        super(UserModel, self).save(*args, **kwargs)
-        return self
-
-    def update_password(self, password):
-        self.password = bcrypt.hashpw(password.encode(av.UNICODE), bcrypt.gensalt())
-        self.save(password_update=True)
-        return self.compare_password(password)
-
-    def compare_password(self, password: str):
-        return bcrypt.checkpw(password.encode(av.UNICODE), self.password)
-    

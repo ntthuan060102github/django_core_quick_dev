@@ -1,44 +1,44 @@
 from rest_framework import serializers
 
 class CommonModelSerializer(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(required=False, read_only=True)
-    updated_at = serializers.DateTimeField(required=False, read_only=True)
-    
     class Options:
-        referenced_by = []
+        nested_serializers = []
 
     def __init__(self, *args, **kwargs):
-        exists = set(self.fields.keys())
+        existing = set(self.fields.keys())
         relation = bool(kwargs.pop("relation", True))
-        fields = kwargs.pop("fields", []) or exists
-        exclude = kwargs.pop("exclude", [])
+        allowed = kwargs.pop("fields", []) or existing
+        excluded = kwargs.pop("excluded", [])
         
         super().__init__(*args, **kwargs)
         
-
-        self.__verify_option_referenced_by()
-        self.__verify_content_referenced_by()
+        self.__verify_option_nested_serializers()
+        # self.__verify_content_nested_serializers()
         
         if relation is False:
-            for r in self.Options.referenced_by:
+            for r in self.Options.nested_serializers:
                 self.fields.pop(r, None)
             
-        for field in exclude + list(exists - fields):
+        for field in excluded + list(existing - allowed):
             self.fields.pop(field, None)
 
     def create(self, validated_data):
-        referenced_by = {
-            r: validated_data.pop(r) for r in self.Options.referenced_by if r in validated_data
+        nested_serializers = {
+            r: validated_data.pop(r) for r in self.Options.nested_serializers if r in validated_data
         }
         instance = self.Meta.model.objects.create(**validated_data)
-        for k, v in referenced_by.items():
-            related_fields = self.fields[k].__class__.Meta.model.get_related_fields()
-            new_v = {
-                **v,
-                **{rf: instance for rf in related_fields}
-            }
-            self.fields[k].__class__.Meta.model.objects.create(**new_v)
         
+        for key, value in nested_serializers.items():
+            if isinstance(self.fields[key], serializers.ListSerializer):
+                related_serializer_instance = self.fields[key].child
+            else:
+                related_serializer_instance = self.fields[key]
+            self.__create_nested_instances(
+                instance, 
+                related_serializer_instance, 
+                value
+            )
+            
         return instance
     
     def update(self, instance, validated_data):
@@ -47,23 +47,55 @@ class CommonModelSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def __verify_option_referenced_by(self):
-        if hasattr(self.Options, "referenced_by"):
-            referenced_by = getattr(self.Options, "referenced_by", None)
+    def __verify_option_nested_serializers(self):
+        if hasattr(self.Options, "nested_serializers"):
+            nested_serializers = getattr(self.Options, "nested_serializers", None)
             if (
-                not isinstance(referenced_by, list) 
+                not isinstance(nested_serializers, list) 
                 or (
                     any(
-                        map(lambda x: not isinstance(x, str), referenced_by)
+                        map(lambda x: not isinstance(x, str), nested_serializers)
                     )
-                    and referenced_by != []
+                    and nested_serializers != []
                 )
             ):
-                exc_obj = f"{self.__class__.__name__}.Options.referenced_by"
+                exc_obj = f"{self.__class__.__name__}.Options.nested_serializers"
                 raise Exception(f"{exc_obj} should be a list of strings.")
             
-    def __verify_content_referenced_by(self):
+    def __verify_content_nested_serializers(self):
         related_fiels = self.Meta.model.get_related_fields()
         # print("---------------------------------------------------")
         # print(self.Meta.model)
         # print(self.fields)
+
+    def __create_nested_instances(self, referenced_instance, serializer_instance, dataset):
+        model = serializer_instance.Meta.model
+        related_model_fields = model.get_related_fields()
+
+        if not isinstance(dataset, list):
+            dataset = [dataset]
+
+        for data in dataset:
+            nested_serializers = {
+                r: data.pop(r) 
+                for r in serializer_instance.Options.nested_serializers 
+                if r in data
+            }
+            instance = model.objects.create(
+                **{
+                    **data, 
+                    related_model_fields[0]: referenced_instance
+                }
+            )
+            for nested_serializer_key in nested_serializers.keys():
+                nested_serializer_field = serializer_instance.fields.get(nested_serializer_key)
+                nested_serializer_instance = getattr(
+                    nested_serializer_field, 
+                    "child", 
+                    nested_serializer_field
+                )
+                self.__create_nested_instances(
+                    instance, 
+                    nested_serializer_instance, 
+                    nested_serializers[nested_serializer_key]
+                )

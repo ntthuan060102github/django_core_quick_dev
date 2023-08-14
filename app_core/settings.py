@@ -10,17 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import pytz
-import importlib
 from pathlib import Path
 from decouple import config
-
-sys_conf = importlib.import_module(f"configs.enviroments.env_{config('ENVIROMENT', default='local')}")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-pajk1seij+@o=)_zhsg$q$3n#w&%8qnp4t2vjpgnxw$kkalw%f'
 
-DEBUG = sys_conf.DEBUG
+ENVIRONMENT = config("ENVIRONMENT", "local")
+
+DEBUG = ENVIRONMENT != "production"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -69,11 +68,11 @@ WSGI_APPLICATION = 'app_core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': sys_conf.DATABASE_NAME,
-        'USER': sys_conf.DATABASE_USER,
-        'PASSWORD': sys_conf.DATABASE_PASSWORD,
-        'HOST': sys_conf.DATABASE_HOST,
-        'PORT': sys_conf.DATABASE_PORT,
+        'NAME': config("DATABASE_DB"),
+        'USER': config("DATABASE_USER"),
+        'PASSWORD': config("DATABASE_PASSWORD"),
+        'HOST': config("DATABASE_HOST"),
+        'PORT': config("DATABASE_PORT"),
     }
 }
 
@@ -95,7 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis://{sys_conf.CACHE_HOST}:{sys_conf.CACHE_POST}/{sys_conf.CACHE_DB}',
+        'LOCATION': f'redis://{config("CACHE_HOST")}:{config("CACHE_PORT")}/{config("CACHE_DATABASE")}',
     }
 }
 
@@ -111,12 +110,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379"
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+CELERY_BROKER_URL = f'redis://{config("CACHE_HOST")}:{config("CACHE_PORT")}/{config("CACHE_DATABASE")}'
+CELERY_RESULT_BACKEND = f'redis://{config("CACHE_HOST")}:{config("CACHE_PORT")}/{config("CACHE_DATABASE")}'
 CELERY_CACHE_BACKEND = "default"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
-# CELERY_TASK_TRACK_STARTED = True
-# CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

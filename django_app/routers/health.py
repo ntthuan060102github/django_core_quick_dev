@@ -1,6 +1,6 @@
 from django.urls import path
-from django_app.views.health import Health
+from django_app.views.health import HealthView
 
 urls = [
-    path('health', Health.as_view({'get': 'health'}))
+    path('health', HealthView.as_view({'get': 'health'}))
 ]

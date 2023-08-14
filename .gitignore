@@ -1,6 +1,4 @@
-./.env
+/venv
+/.vscode
 **/__pycache__
-./venv
 **/migrations
-**/__init__.py
-./.vscode

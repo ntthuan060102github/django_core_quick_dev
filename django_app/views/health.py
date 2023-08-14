@@ -1,15 +1,18 @@
-from decouple import config
-from rest_framework.viewsets import ViewSet
 from django.db import connection
+from django.conf import settings
 from django_redis import get_redis_connection
+from rest_framework.viewsets import ViewSet
+from rest_framework.decorators import action
 from helpers.response import ResponseManager as Response
 
-class Health(ViewSet):
+class HealthView(ViewSet):
     def health(self, request):
         data = {
             "base_url": request.build_absolute_uri(),
             "main_database": self.__get_main_database_connection_info(),
-            "cache_database": self.__get_redis_connection_info()
+            "cache_database": self.__get_redis_connection_info(),
+            "environment": settings.ENVIRONMENT,
+            "debug": settings.DEBUG
         }
         return Response(data).common
     
@@ -19,7 +22,7 @@ class Health(ViewSet):
             conn_inf = {
                 "status": redis_connection.ping()
             }
-            if config("ENVIROMENT") != "production":
+            if settings.ENVIRONMENT != "production":
                 conn_kwagrs = redis_connection.connection_pool.connection_kwargs
                 conn_inf = {
                     **conn_inf,
