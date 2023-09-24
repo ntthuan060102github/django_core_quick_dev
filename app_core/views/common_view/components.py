@@ -1,7 +1,6 @@
 from helpers.response import ResponseManager as Response
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
-import app_core.variables.response_variables as rv
 
 class CreateModelComponent():
     def create(self, request, pk=None, fields=[], excluded_fields=[], **kwargs):

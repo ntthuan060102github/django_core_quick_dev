@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import pytz
 from pathlib import Path
 from decouple import config
+from kombu import Queue
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -91,19 +92,29 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHE_KEY_PREFIX = "django_core"
+
+CACHE_VERSION = "v1"
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': f'redis://{config("CACHE_HOST")}:{config("CACHE_PORT")}/{config("CACHE_DATABASE")}',
+        'KEY_PREFIX': CACHE_KEY_PREFIX,
+        'VERSION': CACHE_VERSION
     }
 }
 
 SESSION_CACHE_ALIAS = "default"
 
 LANGUAGE_CODE = 'en-us'
+
 PY_TIME_ZONE = pytz.UTC
+
 TIME_ZONE = PY_TIME_ZONE.zone
+
 USE_I18N = True
+
 USE_TZ = True
 
 STATIC_URL = 'static/'
@@ -119,3 +130,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_IMPORTS = ["my_app.my_http.tasks._tasks"]
+CELERY_TASK_QUEUES = (
+    Queue(f"{CACHE_KEY_PREFIX}__{CACHE_VERSION}"),
+)
+CELERY_TASK_DEFAULT_QUEUE = f"{CACHE_KEY_PREFIX}__{CACHE_VERSION}"
+

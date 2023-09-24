@@ -1,12 +1,18 @@
-# import os
-# from celery import Celery
+import os
+import datetime
+from celery import Celery
+from django.conf import settings
+from django.core.cache import cache
 
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app_core.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_project.settings')
 
-# app = Celery('app_core')
-# app.config_from_object('django.conf:settings', namespace='CELERY')
-# app.autodiscover_tasks()
+app = Celery('celery_worker')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.result_backend_transport_options = {
+    'global_keyprefix': f"{settings.CACHE_KEY_PREFIX}:{settings.CACHE_VERSION}:celery_management:result:"
+}
+     
+app.autodiscover_tasks()
 
-# @app.task(bind=True)
-# def debug_task(self):
-#     print('Request: {0!r}'.format(self.request))
+def revoke_task(task_id, ttl=7*24*60*60):
+    cache.set(f"celery_management:revoked_time:{task_id}", datetime.datetime.now(), ttl)

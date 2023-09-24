@@ -8,8 +8,6 @@ class DjangoAppConfig(AppConfig):
     service_version = "1.0.0"
     service_version_abbreviation = "v1"
     api_prefix = f"{service_name_abbreviation}/{service_version_abbreviation}"
-    session_cache_database = 15
-    cache_partition = "django_core"
 
-    # def ready(self):
-    #     import django_app.signals.survey_schedule
+    def ready(self):
+        import django_app._celery_signal_handler
