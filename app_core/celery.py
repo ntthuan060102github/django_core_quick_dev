@@ -16,3 +16,5 @@ app.autodiscover_tasks()
 
 def revoke_task(task_id, ttl=7*24*60*60):
     cache.set(f"celery_management:revoked_time:{task_id}", datetime.datetime.now(), ttl)
+
+# celery -A my_project worker --loglevel=ERROR --autoscale=10,3
